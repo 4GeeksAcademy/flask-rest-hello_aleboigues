@@ -72,6 +72,23 @@ def list_user_favorites():
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
     
+# Endpoint para listar solo un planeta (por su id)
+@app.route("/planet/<int:planet_id>", methods=['GET'])
+def list_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+    if planet is None:
+        return jsonify({"msg": "No se ha encontrado el planeta"}), 404
+    return jsonify(planet.serialize()), 200
+
+
+# Endpoint para listar todos los planetas
+@app.route("/planets", methods=['GET'])
+def list_planets():
+    planets = Planet.query.all()
+    if not planets:
+        return jsonify({"msg": "No se han encontrado planetas"}), 404
+    return jsonify([planets.serialize() for character in planets]), 200
+    
     # Obtener todos los favoritos del usuario
     favorite_characters = Character_fav.query.filter_by(user_id=user_id).all()
     favorite_planets = Planet_fav.query.filter_by(user_id=user_id).all()
