@@ -44,6 +44,24 @@ def list_users():
         return jsonify({"msg": "No se han encontrado usuarios"}), 404
     return jsonify([user.serialize() for user in users]), 200
 
+# Endpoint para listar todos los characters
+@app.route("/characters", methods=['GET'])
+def list_characters():
+    characters = Character.query.all()
+    if not characters:
+        return jsonify({"msg": "No se han encontrado personajes"}), 404
+    return jsonify([character.serialize() for character in characters]), 200
+
+
+# Endpoint para listar solo un character (por su id)
+@app.route("/character/<int:character_id>", methods=['GET'])
+def list_character(character_id):
+    character = Character.query.get(character_id)
+    if character is None:
+        return jsonify({"msg": "No se ha encontrado el personaje"}), 404
+    return jsonify(character.serialize()), 200
+
+
 # Endpoint para listar todos los favoritos de un usuario
 @app.route("/users/favorites", methods=['GET'])
 def list_user_favorites():
